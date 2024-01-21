@@ -19,10 +19,10 @@ mongoose
     console.log(con.connections);
     console.log("db connection succesful");
   });
-app.post("/signup", userController.signup);
+app.post("/signups", userController.signup);
 app.post("/login", userController.login);
 app.get("/", userController.protect, userController.getAllUsers);
-const port = process.env.PORT || 5000;
+const port = 3000;
 app.listen(port, () => {
   console.log(`server runing on port no ${port}`);
 });

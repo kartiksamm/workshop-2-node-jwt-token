@@ -1,4 +1,4 @@
-const AppError = require("./../utils/appError");
+const AppErrors = require("./../utils/appError");
 const User = require("./../models/userModel");
 const CatchAsync = require("./../utils/catchAsync");
 const jwt = require("jsonwebtoken");
@@ -20,14 +20,14 @@ exports.signup = CatchAsync(async (req, res, next) => {
   });
 });
 exports.login = CatchAsync(async (req, res, next) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    return next(new AppError("please provide email or password", 400));
+  const { name, password } = req.body;
+  if (!name || !password) {
+    return next(new AppErrors("please provide email or password", 400));
   }
   const user = await User.findOne({ name: name });
   console.log(user);
   if (!user) {
-    return next(new AppError("Incorrect email or password"), 401);
+    return next(new AppErrors("Incorrect email or password", 401));
   }
   const token = signToken(user._id);
   res.status(200).json({
@@ -36,7 +36,7 @@ exports.login = CatchAsync(async (req, res, next) => {
   });
 });
 
-exports.protect = CatchAsync(async (req, res) => {
+exports.protect = CatchAsync(async (req, res, next) => {
   let token;
   if (
     req.headers.authorization &&
@@ -51,6 +51,7 @@ exports.protect = CatchAsync(async (req, res) => {
     });
   }
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
+  console.log(decoded);
   const freshuser = await User.findById(decoded.id);
   if (freshuser) {
     return res.status.json({
@@ -65,6 +66,7 @@ exports.getAllUsers = CatchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "suceess",
     data: {
+      length: tours.length,
       tours,
     },
   });
