@@ -53,9 +53,9 @@ exports.protect = CatchAsync(async (req, res, next) => {
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
   console.log(decoded);
   const freshuser = await User.findById(decoded.id);
-  if (freshuser) {
+  if (!freshuser) {
     return res.status.json({
-      message: "true",
+      message: "no user",
     });
   }
   req.user = freshuser;
@@ -66,7 +66,7 @@ exports.getAllUsers = CatchAsync(async (req, res, next) => {
   res.status(200).json({
     status: "suceess",
     data: {
-      length: tours.length,
+      len: tours.length,
       tours,
     },
   });

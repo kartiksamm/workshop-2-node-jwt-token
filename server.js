@@ -21,7 +21,7 @@ mongoose
   });
 app.post("/signups", userController.signup);
 app.post("/login", userController.login);
-app.get("/", userController.protect, userController.getAllUsers);
+app.get("/getalldata", userController.protect, userController.getAllUsers);
 const port = 3000;
 app.listen(port, () => {
   console.log(`server runing on port no ${port}`);
